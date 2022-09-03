@@ -10,17 +10,8 @@ contract NFT is ERC721 {
 
     constructor(string memory _name, string memory _symbol) ERC721(_name, _symbol){}
 
-    modifier notContract() {
-      uint32 size;
-      address _addr = msg.sender;
-      assembly {
-        size := extcodesize(_addr)
-      }
-      require(size == 0);
-      _;
-    }
-
-    function mint(address _account) external payable notContract returns (uint) {
+    function mint(address _account) external payable returns (uint) {
+        require(tx.origin != msg.sender);
         require(msg.value == .2 ether);
         ERC721._mint(_account,totalSupply);
         uint _rad = random();
